@@ -1,0 +1,263 @@
+/* Колледж.Банк — оформление по макету. Фон — мягкие анимированные переливы без чётких фигур. */
+
+:root {
+    /* Палитра: #051F20 #0B2B26 #163832 (тёмная тема) · #235347 #8EB69B #DAF1DE (светлая) */
+    --bg: #051F20;
+    --sf: linear-gradient(155deg, #163832 0%, #0B2B26 60%);
+    --sf2: linear-gradient(180deg, #051F20 0%, #0a2924 100%);
+    --tx: #DAF1DE;
+    --mu: #8EB69B;
+    --bd: rgba(142, 182, 155, .24);
+    --ac: #8EB69B;
+    --on: #DAF1DE;
+    --lk: #8EB69B;
+    --btn: linear-gradient(135deg, #2b6354 0%, #163832 100%);
+    --btnbd: rgba(142, 182, 155, .5);
+    --sh: 0 24px 50px -18px rgba(0, 0, 0, .65), inset 0 1px 0 rgba(218, 241, 222, .08);
+    --err: #ff9e8f;
+    --ok: #8fe3b0;
+    --g1: #235347; --go1: .75; --g2: #163832; --go2: .9; --g3: #8EB69B; --go3: .22;
+    --deep: #051F20; --lite: #DAF1DE; --pa: #0B2B26; --pb: #163832;
+    --ease: cubic-bezier(.4, 0, .2, 1);
+    --t: .25s;
+}
+
+/* Тема: пока пользователь не выбрал вручную (cookie → data-theme), берётся тема
+   браузера/системы (prefers-color-scheme). Ручной выбор имеет приоритет. */
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+        --bg: #DAF1DE;
+        --sf: linear-gradient(155deg, rgba(190, 222, 200, .78) 0%, rgba(150, 190, 165, .62) 100%); --bf: blur(16px);
+        --sf2: linear-gradient(180deg, rgba(35, 83, 71, .13) 0%, rgba(35, 83, 71, .06) 100%);
+        --tx: #0B2B26; --mu: #2f5245;
+        --bd: rgba(142, 182, 155, .6); --ac: #235347; --on: #DAF1DE; --lk: #235347;
+        --btn: linear-gradient(135deg, #235347 0%, #2f6653 100%);
+        --btnbd: rgba(35, 83, 71, .6);
+        --sh: 0 24px 50px -22px rgba(35, 83, 71, .45), inset 0 1px 0 rgba(255, 255, 255, .45);
+        --err: #a6291d; --ok: #1b6e3a;
+        --g1: #8EB69B; --go1: .7; --g2: #235347; --go2: .18; --g3: #f6fff8; --go3: .95; --deep: #235347; --lite: #f6fff8; --pa: #cfe9d5; --pb: #8EB69B;
+    }
+}
+:root[data-theme="light"] {
+    --bg: #DAF1DE;
+    --sf: linear-gradient(155deg, rgba(190, 222, 200, .78) 0%, rgba(150, 190, 165, .62) 100%); --bf: blur(16px);
+    --sf2: linear-gradient(180deg, rgba(35, 83, 71, .13) 0%, rgba(35, 83, 71, .06) 100%);
+    --tx: #0B2B26; --mu: #2f5245;
+    --bd: rgba(142, 182, 155, .6); --ac: #235347; --on: #DAF1DE; --lk: #235347;
+    --btn: linear-gradient(135deg, #235347 0%, #2f6653 100%);
+    --btnbd: rgba(35, 83, 71, .6);
+    --sh: 0 24px 50px -22px rgba(35, 83, 71, .45), inset 0 1px 0 rgba(255, 255, 255, .45);
+    --err: #a6291d; --ok: #1b6e3a;
+    --g1: #8EB69B; --go1: .7; --g2: #235347; --go2: .18; --g3: #f6fff8; --go3: .95; --deep: #235347; --lite: #f6fff8; --pa: #cfe9d5; --pb: #8EB69B;
+}
+
+/* Переключатель темы: показываем ссылку на противоположную тему. */
+.ib { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--bd); background: var(--sf); color: var(--tx); text-decoration: none; transition: transform var(--t) var(--ease), border-color var(--t) var(--ease); }
+.ib:hover { border-color: var(--ac); transform: rotate(18deg); }
+.t-to-dark { display: none; }
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) .t-to-light { display: none; }
+    :root:not([data-theme="dark"]) .t-to-dark { display: grid; }
+}
+:root[data-theme="light"] .t-to-light { display: none; }
+:root[data-theme="light"] .t-to-dark { display: grid; }
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    color: var(--tx);
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;           /* страница всегда помещается в окно, без прокрутки */
+}
+
+/* Страница занимает ровно окно; размеры плавно подстраиваются под его высоту и ширину. */
+.wrap {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(14px, 3.2vh, 28px) clamp(20px, 3.75vw, 48px) clamp(14px, 3.2vh, 32px);
+}
+.stage { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+.center-stage { align-items: center; text-align: center; }
+
+a { color: inherit; }
+.lk { color: var(--lk); font-weight: 700; text-decoration: none; transition: opacity var(--t) var(--ease); }
+.lk:hover { opacity: .75; }
+.mu { color: var(--mu); }
+.small { font-size: 13px; }
+.center { text-align: center; }
+
+:focus-visible { outline: 2px solid var(--ac); outline-offset: 2px; }
+
+/* ----- шапка ----- */
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.logo { font-weight: 700; font-size: 24px; letter-spacing: -.03em; color: var(--tx); text-decoration: none; }
+.logo i { font-style: normal; color: var(--ac); }
+.links { display: flex; gap: 32px; font-size: 14px; font-weight: 500; }
+.links a { color: var(--mu); text-decoration: none; padding: 10px 0; transition: color var(--t) var(--ease); }
+.links a:hover { color: var(--tx); }
+.acts { display: flex; gap: 10px; align-items: center; }
+.acts form { margin: 0; }
+.who { font-size: 14px; color: var(--mu); margin-right: 6px; }
+
+/* ----- кнопки ----- */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    height: 46px; padding: 0 24px; border-radius: 999px;
+    font: 600 14px/1 'Inter', 'Segoe UI', system-ui, sans-serif;
+    text-decoration: none; cursor: pointer;
+    border: 1px solid var(--bd); color: var(--tx); background: var(--sf);
+    transition: transform var(--t) var(--ease), border-color var(--t) var(--ease), filter var(--t) var(--ease), background-color var(--t) var(--ease);
+}
+.btn:hover { border-color: var(--ac); transform: translateY(-2px); }
+.btn:active { transform: translateY(0) scale(.98); }
+.btn.pr { background: var(--btn); border-color: var(--btnbd); color: var(--on); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 10px 24px -12px rgba(0, 0, 0, .55); }
+.btn.pr:hover { filter: brightness(1.12); border-color: var(--ac); }
+.btn.sm { height: 44px; padding: 0 18px; font-size: 13px; }
+.btn.wide { width: 100%; height: clamp(46px, 6.6vh, 54px); }
+.btn svg.i { transition: transform var(--t) var(--ease); }
+.btn:hover svg.i { transform: translateX(4px); }
+
+svg.i { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* ----- типографика ----- */
+.dsp { font-weight: 600; letter-spacing: -.035em; line-height: 1.08; margin: 0; }
+.dsp em { font-style: normal; color: var(--lk); }
+.lead { font-size: clamp(15px, 2.3vh, 18px); line-height: 1.6; margin: clamp(12px, 2.8vh, 22px) 0 0; max-width: 470px; }
+.eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; color: var(--lk); }
+
+/* ----- карточки ----- */
+.card { background: var(--sf); border: 1px solid var(--bd); border-radius: 22px; box-shadow: var(--sh); -webkit-backdrop-filter: var(--bf, none); backdrop-filter: var(--bf, none); }
+
+/* ----- главная ----- */
+.home { max-width: 640px; }
+.home h1 { font-size: clamp(36px, 8.4vh, 64px); margin-top: clamp(10px, 2.5vh, 20px); }
+.hello { margin: clamp(12px, 2.8vh, 22px) 0 0; font-size: 15px; color: var(--mu); }
+.hello b { color: var(--tx); }
+.row-btn { display: flex; gap: 14px; flex-wrap: wrap; margin-top: clamp(18px, 4vh, 32px); }
+
+/* ----- окно регистрации / входа ----- */
+.auth { flex: 1; min-height: 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 48px; }
+.hero { flex: 1 1 480px; max-width: 600px; }
+.hero h1 { font-size: clamp(36px, 7.5vh, 60px); }
+.form-card { flex: 0 1 460px; min-width: 320px; padding: clamp(20px, 4vh, 32px); display: flex; flex-direction: column; gap: clamp(12px, 2.6vh, 22px); }
+.form-card h2 { font-size: clamp(26px, 4vh, 32px); }
+.form-card form { margin: 0; display: flex; flex-direction: column; gap: clamp(12px, 2.6vh, 22px); }
+.sub { font-size: 14px; }
+.form-card p { margin: 0; }
+.form-card .sub { margin-top: 8px; }
+
+.tabs { display: flex; gap: 6px; padding: 5px; border-radius: 999px; border: 1px solid var(--bd); background: var(--sf2); }
+.tab { flex: 1; height: clamp(40px, 5.5vh, 44px); border-radius: 999px; display: grid; place-items: center; font-size: 14px; font-weight: 600; color: var(--mu); text-decoration: none; transition: color var(--t) var(--ease); }
+.tab:hover { color: var(--tx); }
+.tab.on { background: var(--btn); color: var(--on); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2); }
+
+.fl { display: block; }
+.fl label { display: block; font-size: 12px; font-weight: 600; color: var(--mu); margin-bottom: 8px; }
+.in { height: clamp(46px, 6.6vh, 54px); border-radius: 17px; border: 1px solid var(--bd); background: var(--sf2); display: flex; align-items: center; gap: 12px; padding: 0 18px; color: var(--mu); transition: border-color var(--t) var(--ease), color var(--t) var(--ease); }
+.in:hover { border-color: color-mix(in srgb, var(--ac) 55%, var(--bd)); }
+.in:focus-within { border-color: var(--ac); color: var(--lk); }
+.in.bad { border-color: var(--err); }
+.in input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: var(--tx); font: 500 15px 'Inter', 'Segoe UI', system-ui, sans-serif; }
+.in input::placeholder { color: var(--mu); opacity: 1; }
+.err { margin: 6px 0 0; font-size: 13px; font-weight: 600; color: var(--err); animation: rise .3s var(--ease) both; }
+.alert { padding: 12px 16px; border-radius: 14px; border: 1px solid var(--err); color: var(--err); font-size: 14px; font-weight: 600; animation: rise .3s var(--ease) both; }
+.ok { padding: 12px 16px; border-radius: 14px; border: 1px solid var(--ok); color: var(--ok); font-size: 14px; font-weight: 600; animation: rise .3s var(--ease) both; }
+
+/* ----- личный кабинет (заглушка) ----- */
+.stub h1 { font-size: clamp(34px, 7vh, 56px); }
+.stub p { margin: 14px 0 0; font-size: 15px; }
+
+/* ======================= АНИМАЦИИ (общие для всех страниц) =======================
+   1) Плавный переход между страницами (View Transitions): общие элементы
+      перетекают на новое место, остальное — мягко растворяется.
+   2) Появление содержимого страницы.
+   3) Плавные состояния наведения и фокуса (заданы выше через --t / --ease).
+   Новые страницы получают это автоматически; нужен только общий style.css. */
+@view-transition { navigation: auto; }
+
+/* ----- живой фон: мягкие цветные переливы, без чётких форм -----
+   Три сильно размытых цветовых пятна медленно плывут и меняют форму. */
+.bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.bg i { transform: translateZ(0); border-radius: 50%;
+    position: absolute; display: block; filter: blur(110px); will-change: transform, border-radius;
+    animation-timing-function: ease-in-out; animation-iteration-count: infinite; animation-direction: alternate;
+}
+.bg .g1 { width: 46vmax; height: 40vmax; left: -12vmax; top: -14vmax; background: var(--g1); opacity: var(--go1); animation-name: flow1; animation-duration: 38s; animation-delay: var(--d1, 0s); }
+.bg .g2 { width: 42vmax; height: 46vmax; right: -14vmax; bottom: -16vmax; background: var(--g2); opacity: var(--go2); animation-name: flow2; animation-duration: 50s; animation-delay: var(--d2, 0s); }
+.bg .g3 { width: 24vmax; height: 22vmax; left: 34%; bottom: 6%; background: var(--g3); opacity: var(--go3); animation-name: flow3; animation-duration: 44s; animation-delay: var(--d3, 0s); }
+
+@keyframes flow1 {
+    0%   { transform: translate(0, 0) rotate(0deg) scale(1, 1); }
+    33%  { transform: translate(26vw, 10vh) rotate(60deg) scale(1.35, .7); }
+    66%  { transform: translate(12vw, 38vh) rotate(-30deg) scale(.8, 1.4); }
+    100% { transform: translate(-4vw, 18vh) rotate(25deg) scale(1.2, .85); }
+}
+@keyframes flow2 {
+    0%   { transform: translate(0, 0) rotate(0deg) scale(1, 1); }
+    33%  { transform: translate(-28vw, -12vh) rotate(-70deg) scale(.75, 1.4); }
+    66%  { transform: translate(-10vw, -36vh) rotate(40deg) scale(1.4, .75); }
+    100% { transform: translate(8vw, -16vh) rotate(-20deg) scale(.9, 1.2); }
+}
+@keyframes flow3 {
+    0%   { transform: translate(0, 0) rotate(0deg) scale(1, 1); }
+    33%  { transform: translate(-22vw, -22vh) rotate(90deg) scale(1.6, .7); }
+    66%  { transform: translate(16vw, -10vh) rotate(-60deg) scale(.7, 1.6); }
+    100% { transform: translate(-6vw, 12vh) rotate(30deg) scale(1.2, .9); }
+}.wrap { position: relative; z-index: 1; }
+
+
+.tab.on { view-transition-name: tab-pill; }      /* «таблетка» переключателя едет между «Вход» и «Регистрация» */
+.form-card { view-transition-name: auth-card; }  /* карточка остаётся на месте, меняется только содержимое */
+
+::view-transition-group(*) { animation-duration: .4s; animation-timing-function: var(--ease); }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .3s; }
+
+@keyframes rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: none; }
+}
+.hero, .home, .stub { animation: rise .5s var(--ease) both; }
+.nav { animation: rise .4s var(--ease) both; position: relative; z-index: 2; }   /* шапка поверх декоративных слоёв */
+.stage { position: relative; z-index: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    @view-transition { navigation: none; }
+}
+
+/* На узких экранах и очень низких окнах прокрутка разрешена, чтобы ничего не обрезалось. */
+@media (max-width: 900px), (max-height: 620px) {
+    body { overflow: auto; }
+    html, body { height: auto; min-height: 100%; }
+    .links { display: none; }
+    .wrap { padding: 20px 20px 40px; }
+    .auth { padding-top: 24px; gap: 28px; }
+}
+
+/* ----- главная: рифлёное стекло с текучим светом внутри -----
+   Рисуется одним WebGL-холстом (см. app/hero_art.php): плавно и без мерцания.
+   Появление: рёбра «вырастают» из середины, по очереди справа налево (считается в шейдере). */
+.art {
+    --P: min(44vw, 720px);
+    position: fixed; z-index: 0; pointer-events: none;
+    top: -2vh; bottom: -2vh; right: 0; width: var(--P);
+}
+.art::before {
+    content: ""; position: absolute; inset: 0 -4% 0 -22%; z-index: -1;
+    background: radial-gradient(ellipse, color-mix(in srgb, var(--g1) 55%, transparent), color-mix(in srgb, var(--g1) 15%, transparent) 55%, transparent 75%);
+    filter: blur(40px); animation: rise .9s var(--ease) both;
+}
+.art .glass { display: block; width: 100%; height: 100%; }
+@media (max-width: 900px) { .art { display: none; } }
